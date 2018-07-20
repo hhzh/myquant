@@ -62,59 +62,59 @@ public interface ISpotTrade {
      * 批量下单
      * @param symbol   btc_usd: 比特币 ltc_usd: 莱特币
      * @param type  买卖类型： 限价单（buy/sell） 市价单（buy_market/sell_market）
-     * @param orders_data JSON类型的字符串 例：[{price:3,amount:5},{price:3,amount:3}]
+     * @param ordersData JSON类型的字符串 例：[{price:3,amount:5},{price:3,amount:3}]
      *        最大下单量为5，price和amount参数参考trade接口中的说明
      * @return
      * @throws IOException
      * @throws HttpException
      */
-    public String batch_trade( String symbol, String type,
-                               String orders_data) throws HttpException, IOException;
+    public String batchTrade(String symbol, String type,
+                             String ordersData) throws HttpException, IOException;
 
     /**
      * 撤销订单
      * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
-     * @param order_id 订单ID(多个订单ID中间以","分隔,一次最多允许撤消3个订单)
+     * @param orderId 订单ID(多个订单ID中间以","分隔,一次最多允许撤消3个订单)
      * @return
      * @throws IOException
      * @throws HttpException
      */
-    public String cancel_order(String symbol, String order_id) throws HttpException, IOException;
+    public String cancelOrder(String symbol, String orderId) throws HttpException, IOException;
 
     /**
      * 获取用户的订单信息
      * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
-     * @param order_id  订单ID(-1查询全部订单，否则查询相应单号的订单)
+     * @param orderId  订单ID(-1查询全部订单，否则查询相应单号的订单)
      * @return
      * @throws IOException
      * @throws HttpException
      */
-    public String order_info(String symbol, String order_id) throws HttpException, IOException;
+    public String orderInfo(String symbol, String orderId) throws HttpException, IOException;
 
     /**
      * 批量获取用户订单
      * @param type  查询类型 0:未成交，未成交 1:完全成交，已撤销
      * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
-     * @param order_id  订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单)
+     * @param orderId  订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单)
      * @return
      * @throws IOException
      * @throws HttpException
      */
-    public String orders_info(String type, String symbol,
-                              String order_id) throws HttpException, IOException;
+    public String ordersInfo(String type, String symbol,
+                             String orderId) throws HttpException, IOException;
 
     /**
      * 获取历史订单信息，只返回最近七天的信息
      * @param symbol btc_usd: 比特币 ltc_usd: 莱特币
      * @param status 委托状态: 0：未成交 1：已完成(最近七天的数据)
-     * @param current_page  当前页数
-     * @param page_length  每页数据条数，最多不超过200
+     * @param currentPage  当前页数
+     * @param pageLength  每页数据条数，最多不超过200
      * @return
      * @throws IOException
      * @throws HttpException
      */
-    public String order_history(String symbol, String status,
-                                String current_page, String page_length) throws HttpException, IOException;
+    public String orderHistory(String symbol, String status,
+                               String currentPage, String pageLength) throws HttpException, IOException;
 
 
 }

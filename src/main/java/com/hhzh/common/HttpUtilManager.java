@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 /**
  * 封装HTTP get post请求，简化发送http请求
@@ -34,7 +35,7 @@ public class HttpUtilManager {
     private static HttpUtilManager instance = new HttpUtilManager();
     private static HttpClient client;
     private static long startTime = System.currentTimeMillis();
-    public  static PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+    public static PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
     private static ConnectionKeepAliveStrategy keepAliveStrat = new DefaultConnectionKeepAliveStrategy() {
 
         public long getKeepAliveDuration(
@@ -49,13 +50,14 @@ public class HttpUtilManager {
         }
 
     };
+
     private HttpUtilManager() {
         client = HttpClients.custom().setConnectionManager(cm).setKeepAliveStrategy(keepAliveStrat).build();
     }
 
-    public static void IdleConnectionMonitor(){
+    public static void IdleConnectionMonitor() {
 
-        if(System.currentTimeMillis()-startTime>30000){
+        if (System.currentTimeMillis() - startTime > 30000) {
             startTime = System.currentTimeMillis();
             cm.closeExpiredConnections();
             cm.closeIdleConnections(30, TimeUnit.SECONDS);
@@ -85,76 +87,56 @@ public class HttpUtilManager {
         return new HttpGet(url);
     }
 
-    public String requestHttpGet(String url_prex,String url,String param) throws HttpException, IOException {
+    public String requestHttpGet(String urlPrex, String url, String param) throws HttpException, IOException {
 
         IdleConnectionMonitor();
-        url=url_prex+url;
-        if(param!=null && !param.equals("")){
-            if(url.endsWith("?")){
-                url = url+param;
-            }else{
-                url = url+"?"+param;
+        url = urlPrex + url;
+        if (param != null && !param.equals("")) {
+            if (url.endsWith("?")) {
+                url = url + param;
+            } else {
+                url = url + "?" + param;
             }
         }
         HttpRequestBase method = this.httpGetMethod(url);
         method.setConfig(requestConfig);
         HttpResponse response = client.execute(method);
-        HttpEntity entity =  response.getEntity();
-        if(entity == null){
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
             return "";
         }
-        InputStream is = null;
-        String responseData = "";
-        try{
-            is = entity.getContent();
-            responseData = IOUtils.toString(is, "UTF-8");
-        }finally{
-            if(is!=null){
-                is.close();
-            }
-        }
-        return responseData;
+        return EntityUtils.toString(entity);
     }
 
-    public String requestHttpPost(String url_prex,String url,Map<String,String> params) throws HttpException, IOException{
+    public String requestHttpPost(String urlPrex, String url, Map<String, String> params) throws HttpException, IOException {
 
         IdleConnectionMonitor();
-        url=url_prex+url;
+        url = urlPrex + url;
         HttpPost method = this.httpPostMethod(url);
         List<NameValuePair> valuePairs = this.convertMap2PostParams(params);
         UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(valuePairs, Consts.UTF_8);
         method.setEntity(urlEncodedFormEntity);
         method.setConfig(requestConfig);
         HttpResponse response = client.execute(method);
-        HttpEntity entity =  response.getEntity();
-        if(entity == null){
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
             return "";
         }
-        InputStream is = null;
-        String responseData = "";
-        try{
-            is = entity.getContent();
-            responseData = IOUtils.toString(is, "UTF-8");
-        }finally{
-            if(is!=null){
-                is.close();
-            }
-        }
-        return responseData;
+        return EntityUtils.toString(entity);
 
     }
 
-    private List<NameValuePair> convertMap2PostParams(Map<String,String> params){
-        List<String> keys = new ArrayList<String>(params.keySet());
-        if(keys.isEmpty()){
+    private List<NameValuePair> convertMap2PostParams(Map<String, String> params) {
+        List<String> keys = new ArrayList<>(params.keySet());
+        if (keys.isEmpty()) {
             return null;
         }
         int keySize = keys.size();
-        List<NameValuePair>  data = new LinkedList<NameValuePair>() ;
-        for(int i=0;i<keySize;i++){
+        List<NameValuePair> data = new LinkedList<>();
+        for (int i = 0; i < keySize; i++) {
             String key = keys.get(i);
             String value = params.get(key);
-            data.add(new BasicNameValuePair(key,value));
+            data.add(new BasicNameValuePair(key, value));
         }
         return data;
     }
