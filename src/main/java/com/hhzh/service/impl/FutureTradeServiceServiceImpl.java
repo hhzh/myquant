@@ -15,14 +15,6 @@ import java.util.Map;
 //@Service
 public class FutureTradeServiceServiceImpl extends CommonTradeService implements IFutureTradeService {
 
-    public FutureTradeServiceServiceImpl(String urlPrex, String apiKey, String secretKey) {
-        super(urlPrex, apiKey, secretKey);
-    }
-
-    public FutureTradeServiceServiceImpl(String urlPrex) {
-        super(urlPrex);
-    }
-
     /**
      * 期货行情URL
      */

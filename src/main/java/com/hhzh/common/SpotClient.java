@@ -8,25 +8,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpException;
 
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 现货 REST API 客户端请求
  */
 @Slf4j
 public class SpotClient {
 
-    public static void main(String[] args) throws HttpException, IOException{
-
-        String apiKey = "";
-        String secretKey = "";
-        String urlPrex = "https://www.okb.com";
-
+    public static void main(String[] args) throws HttpException, IOException {
         /**
          * get请求无需发送身份认证,通常用于获取行情，市场深度等公共信息
          *
          */
-        ISpotTrade spotGet = new SpotTradeImpl(urlPrex);
+        ISpotTrade spotGet = new SpotTradeImpl();
 
         /**
          * post请求需发送身份认证，获取用户个人相关信息时，需要指定api_key,与secret_key并与参数进行签名，
@@ -34,11 +27,11 @@ public class SpotClient {
          * 发送post请求之前，程序会做自动加密，生成签名。
          *
          */
-        ISpotTrade spotPost = new SpotTradeImpl(urlPrex, apiKey, secretKey);
+        ISpotTrade spotPost = new SpotTradeImpl();
 
         //现货行情
         String btcUsd = spotGet.ticker("btc_usd");
-        log.info(btcUsd);
+
 
         //现货市场深度
         //String depth = spotGet.depth("btc_usd");
@@ -69,8 +62,6 @@ public class SpotClient {
         //
         ////获取用户历史订单信息，只返回最近七天的信息
         //spotPost.orderHistory("btc_usd", "0", "1", "20");
-
-
 
 
     }

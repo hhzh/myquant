@@ -15,15 +15,10 @@ import com.alibaba.fastjson.JSONObject;
 public class FutureClient {
 
     public static void main(String[] args) throws HttpException, IOException {
-
-
-        String apiKey = "";
-        String secretKey = "";
-        String urlPrex = "https://www.okb.com";
         /**
          *  get请求无需发送身份认证,通常用于获取行情，市场深度等公共信息
          */
-        IFutureTradeService futureGetV1 = new FutureTradeServiceServiceImpl(urlPrex);
+        IFutureTradeService futureGetV1 = new FutureTradeServiceServiceImpl();
 
         /**
          * post请求需发送身份认证，获取用户个人相关信息时，需要指定api_key,与secret_key并与参数进行签名，
@@ -31,7 +26,7 @@ public class FutureClient {
          * 发送post请求之前，程序会做自动加密，生成签名。
          *
          */
-        IFutureTradeService futurePostV1 = new FutureTradeServiceServiceImpl(urlPrex, apiKey, secretKey);
+        IFutureTradeService futurePostV1 = new FutureTradeServiceServiceImpl();
 
         //期货行情信息
         String ticker = futureGetV1.futureTicker("btc_usd", "this_week");

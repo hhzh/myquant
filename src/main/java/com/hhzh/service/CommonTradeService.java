@@ -11,24 +11,12 @@ import java.util.Map;
 
 public class CommonTradeService {
 
-    protected String secretKey;
-
-    protected String apiKey;
-
-    protected String urlPrex;
+    protected String secretKey = "";
+    protected String apiKey = "";
+    protected String urlPrex = "https://www.okb.com";
 
 
     public CommonTradeService() {
-    }
-
-    public CommonTradeService(String urlPrex) {
-        this.urlPrex = urlPrex;
-    }
-
-    public CommonTradeService(String secretKey, String apiKey, String urlPrex) {
-        this.secretKey = secretKey;
-        this.apiKey = apiKey;
-        this.urlPrex = urlPrex;
     }
 
     protected String requestGet(String symbol, String url) throws HttpException, IOException {
@@ -68,7 +56,7 @@ public class CommonTradeService {
         return httpUtil.requestHttpPost(urlPrex, url, params);
     }
 
-    protected String requestPost(String symbol, String contractType,String url) throws HttpException, IOException {
+    protected String requestPost(String symbol, String contractType, String url) throws HttpException, IOException {
         Map<String, String> params = new HashMap<>();
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);

@@ -15,14 +15,6 @@ import java.util.Map;
 //@Service
 public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
 
-    public SpotTradeImpl(String urlPrex, String apiKey, String secretKey) {
-        super(urlPrex,apiKey,secretKey);
-    }
-
-    public SpotTradeImpl(String urlPrex) {
-        super(urlPrex);
-    }
-
     /**
      * 现货行情URL
      */
