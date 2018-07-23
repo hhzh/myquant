@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class XRPStrategy {
 
     @Autowired
-    private IFutureTradeService futureTrade;
+    private IFutureTradeService futureTradeService;
 
     public void executeStrategy() {
 

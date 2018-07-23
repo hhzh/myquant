@@ -240,7 +240,7 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
      * @throws HttpException
      */
     @Override
-    public String futureUserinfo() throws HttpException, IOException {
+    public String futureUserInfo() throws HttpException, IOException {
         return this.requestPost(FUTURE_USERINFO_URL);
     }
 
@@ -252,7 +252,7 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
      * @throws IOException
      */
     @Override
-    public String futureUserinfo4fix() throws HttpException, IOException {
+    public String futureUserInfo4Fix() throws HttpException, IOException {
         return this.requestPost(FUTURE_USERINFO_4FIX_URL);
     }
 
@@ -280,7 +280,7 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
      * @throws IOException
      */
     @Override
-    public String futurePosition4fix(String symbol, String contractType) throws HttpException, IOException {
+    public String futurePosition4Fix(String symbol, String contractType) throws HttpException, IOException {
         return this.requestPost(symbol, contractType, this.FUTURE_POSITION_4FIX_URL);
     }
 

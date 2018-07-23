@@ -85,7 +85,7 @@ public interface IFutureTradeService {
      * @throws IOException
      * @throws HttpException
      */
-    public String futureUserinfo() throws HttpException, IOException;
+    public String futureUserInfo() throws HttpException, IOException;
 
     /**
      * 期货逐仓账户信息
@@ -93,7 +93,7 @@ public interface IFutureTradeService {
      * @throws HttpException
      * @throws IOException
      */
-    public String futureUserinfo4fix()throws HttpException, IOException;
+    public String futureUserInfo4Fix()throws HttpException, IOException;
 
     /**
      * 用户持仓查询
@@ -113,7 +113,7 @@ public interface IFutureTradeService {
      * @throws HttpException
      * @throws IOException
      */
-    public String futurePosition4fix(String symbol, String contractType) throws HttpException, IOException;
+    public String futurePosition4Fix(String symbol, String contractType) throws HttpException, IOException;
 
     /**
      * 获取用户订单信息

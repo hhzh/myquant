@@ -61,16 +61,16 @@ public class FutureClient {
         futurePostV1.futureCancel("btc_usd", "this_week", tradeOrderV1);
 
         //期货账户信息
-        futurePostV1.futureUserinfo();
+        futurePostV1.futureUserInfo();
 
         //逐仓期货账户信息
-        futurePostV1.futureUserinfo4fix();
+        futurePostV1.futureUserInfo4Fix();
 
         //期货用户持仓查询
         futurePostV1.futurePosition("btc_usd", "this_week");
 
         //期货用户逐仓持仓查询
-        futurePostV1.futurePosition4fix("btc_usd", null);
+        futurePostV1.futurePosition4Fix("btc_usd", null);
 
 
     }
