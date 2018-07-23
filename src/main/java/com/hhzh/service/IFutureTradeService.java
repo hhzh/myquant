@@ -4,7 +4,7 @@ import org.apache.http.HttpException;
 
 import java.io.IOException;
 
-public interface IFutureTrade {
+public interface IFutureTradeService {
 
     /**
      * 期货行情

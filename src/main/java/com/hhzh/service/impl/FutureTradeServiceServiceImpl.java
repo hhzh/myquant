@@ -3,89 +3,83 @@ package com.hhzh.service.impl;
 import com.hhzh.common.HttpUtilManager;
 import com.hhzh.common.MD5Util;
 import com.hhzh.common.StringUtil;
-import com.hhzh.service.IFutureTrade;
+import com.hhzh.service.CommonTradeService;
+import com.hhzh.service.IFutureTradeService;
 import org.apache.http.HttpException;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FutureTradeImpl implements IFutureTrade {
+//@Service
+public class FutureTradeServiceServiceImpl extends CommonTradeService implements IFutureTradeService {
 
-    private String secretKey;
-
-    private String apiKey;
-
-    private String urlPrex;
-
-    public FutureTradeImpl(String urlPrex, String apiKey, String secretKey) {
-        this.apiKey = apiKey;
-        this.secretKey = secretKey;
-        this.urlPrex = urlPrex;
+    public FutureTradeServiceServiceImpl(String urlPrex, String apiKey, String secretKey) {
+        super(urlPrex, apiKey, secretKey);
     }
 
-    public FutureTradeImpl(String urlPrex) {
-        this.urlPrex = urlPrex;
-
+    public FutureTradeServiceServiceImpl(String urlPrex) {
+        super(urlPrex);
     }
 
     /**
      * 期货行情URL
      */
-    private final String FUTURE_TICKER_URL = "/api/v1/futureTicker.do";
+    private final String FUTURE_TICKER_URL = "/api/v1/future_ticker.do";
     /**
      * 期货指数查询URL
      */
-    private final String FUTURE_INDEX_URL = "/api/v1/futureIndex.do";
+    private final String FUTURE_INDEX_URL = "/api/v1/future_index.do";
 
     /**
      * 期货交易记录查询URL
      */
-    private final String FUTURE_TRADES_URL = "/api/v1/futureTrades.do";
+    private final String FUTURE_TRADES_URL = "/api/v1/future_trades.do";
 
     /**
      * 期货市场深度查询URL
      */
-    private final String FUTURE_DEPTH_URL = "/api/v1/futureDepth.do";
+    private final String FUTURE_DEPTH_URL = "/api/v1/future_depth.do";
     /**
      * 美元-人民币汇率查询URL
      */
-    private final String FUTURE_EXCHANGE_RATE_URL = "/api/v1/exchangeRate.do";
+    private final String FUTURE_EXCHANGE_RATE_URL = "/api/v1/exchange_rate.do";
 
     /**
      * 期货取消订单URL
      */
-    private final String FUTURE_CANCEL_URL = "/api/v1/futureCancel.do";
+    private final String FUTURE_CANCEL_URL = "/api/v1/future_cancel.do";
 
     /**
      * 期货下单URL
      */
-    private final String FUTURE_TRADE_URL = "/api/v1/futureTrade.do";
+    private final String FUTURE_TRADE_URL = "/api/v1/future_trade.do";
 
     /**
      * 期货账户信息URL
      */
-    private final String FUTURE_USERINFO_URL = "/api/v1/futureUserinfo.do";
+    private final String FUTURE_USERINFO_URL = "/api/v1/future_userinfo.do";
 
     /**
      * 逐仓期货账户信息URL
      */
-    private final String FUTURE_USERINFO_4FIX_URL = "/api/v1/futureUserinfo4fix.do";
+    private final String FUTURE_USERINFO_4FIX_URL = "/api/v1/future_userinfo_4fix.do";
 
     /**
      * 期货持仓查询URL
      */
-    private final String FUTURE_POSITION_URL = "/api/v1/futurePosition.do";
+    private final String FUTURE_POSITION_URL = "/api/v1/future_position.do";
 
     /**
      * 期货逐仓持仓查询URL
      */
-    private final String FUTURE_POSITION_4FIX_URL = "/api/v1/futurePosition4fix.do";
+    private final String FUTURE_POSITION_4FIX_URL = "/api/v1/future_position_4fix.do";
 
     /**
      * 用户期货订单信息查询URL
      */
-    private final String FUTURE_ORDER_INFO_URL = "/api/v1/futureOrderInfo.do";
+    private final String FUTURE_ORDER_INFO_URL = "/api/v1/future_order_info.do";
 
 
     /**
@@ -99,24 +93,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureTicker(String symbol, String contractType) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if (!StringUtil.isEmpty(symbol)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        if (!StringUtil.isEmpty(contractType)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "contract_type=" + contractType;
-
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, FUTURE_TICKER_URL, param);
-        // System.out.println(result);
-        return result;
+        return this.requestGet(symbol, contractType, FUTURE_TICKER_URL);
     }
 
     /**
@@ -129,17 +106,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureIndex(String symbol) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if (!StringUtil.isEmpty(symbol)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, FUTURE_INDEX_URL, param);
-        // System.out.println(result);
-        return result;
+        return this.requestGet(symbol, FUTURE_INDEX_URL);
     }
 
     /**
@@ -153,24 +120,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureTrades(String symbol, String contractType) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if (!StringUtil.isEmpty(symbol)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        if (!StringUtil.isEmpty(contractType)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "contract_type=" + contractType;
-
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, FUTURE_TRADES_URL, param);
-        // System.out.println(result);
-        return result;
+        return this.requestGet(symbol, contractType, FUTURE_TRADES_URL);
     }
 
     /**
@@ -184,24 +134,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureDepth(String symbol, String contractType) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if (!StringUtil.isEmpty(symbol)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        if (!StringUtil.isEmpty(contractType)) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "contract_type=" + contractType;
-
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, FUTURE_DEPTH_URL, param);
-        // System.out.println(result);
-        return result;
+        return this.requestGet(symbol, contractType, FUTURE_DEPTH_URL);
     }
 
     /**
@@ -214,9 +147,7 @@ public class FutureTradeImpl implements IFutureTrade {
     @Override
     public String exchangeRate() throws HttpException, IOException {
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpGet(urlPrex, FUTURE_EXCHANGE_RATE_URL, null);
-        // System.out.println(result);
-        return result;
+        return httpUtil.requestHttpGet(this.urlPrex, FUTURE_EXCHANGE_RATE_URL, null);
     }
 
     /**
@@ -310,19 +241,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureUserinfo() throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-
-        params.put("apiKey", apiKey);
-
-        String sign = MD5Util.buildMysignV1(params, this.secretKey);
-        params.put("sign", sign);
-
-
-        // 发送post请求
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, this.FUTURE_USERINFO_URL, params);
+        return this.requestPost(FUTURE_USERINFO_URL);
     }
 
     /**
@@ -334,18 +253,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futureUserinfo4fix() throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
-
-        String sign = MD5Util.buildMysignV1(params, this.secretKey);
-        params.put("sign", sign);
-
-
-        // 发送post请求
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, this.FUTURE_USERINFO_4FIX_URL, params);
+        return this.requestPost(FUTURE_USERINFO_4FIX_URL);
     }
 
     /**
@@ -359,21 +267,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futurePosition(String symbol, String contractType) throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-        if (!StringUtil.isEmpty(symbol)) {
-            params.put("symbol", symbol);
-        }
-        if (!StringUtil.isEmpty(contractType)) {
-            params.put("contract_type", contractType);
-        }
-        params.put("apiKey", apiKey);
-        String sign = MD5Util.buildMysignV1(params, secretKey);
-        params.put("sign", sign);
-        // 发送post请求
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, this.FUTURE_POSITION_URL, params);
+        return this.requestPost(symbol, contractType, FUTURE_POSITION_URL);
     }
 
     /**
@@ -387,20 +281,7 @@ public class FutureTradeImpl implements IFutureTrade {
      */
     @Override
     public String futurePosition4fix(String symbol, String contractType) throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-        if (!StringUtil.isEmpty(symbol)) {
-            params.put("symbol", symbol);
-        }
-        if (!StringUtil.isEmpty(contractType)) {
-            params.put("contract_type", contractType);
-        }
-        params.put("apiKey", apiKey);
-        String sign = MD5Util.buildMysignV1(params, secretKey);
-        params.put("sign", sign);
-        // 发送post请求
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, this.FUTURE_POSITION_4FIX_URL, params);
+        return this.requestPost(symbol, contractType, this.FUTURE_POSITION_4FIX_URL);
     }
 
     /**

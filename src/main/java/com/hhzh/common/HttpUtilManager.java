@@ -91,7 +91,7 @@ public class HttpUtilManager {
 
         IdleConnectionMonitor();
         url = urlPrex + url;
-        if (param != null && !param.equals("")) {
+        if (param != null && !"".equals(param)) {
             if (url.endsWith("?")) {
                 url = url + param;
             } else {

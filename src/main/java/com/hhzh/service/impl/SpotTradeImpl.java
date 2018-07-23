@@ -3,34 +3,24 @@ package com.hhzh.service.impl;
 import com.hhzh.common.HttpUtilManager;
 import com.hhzh.common.MD5Util;
 import com.hhzh.common.StringUtil;
+import com.hhzh.service.CommonTradeService;
 import com.hhzh.service.ISpotTrade;
 import org.apache.http.HttpException;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author huazhen.he
- * @apiNote
- * @date 2018/7/16
- */
-public class SpotTradeImpl implements ISpotTrade {
+//@Service
+public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
 
-    private String secretKey;
-
-    private String apiKey;
-
-    private String urlPrex;
-
-    public SpotTradeImpl(String urlPrex, String apiKey, String secretKey){
-        this.apiKey = apiKey;
-        this.secretKey = secretKey;
-        this.urlPrex = urlPrex;
+    public SpotTradeImpl(String urlPrex, String apiKey, String secretKey) {
+        super(urlPrex,apiKey,secretKey);
     }
 
-    public SpotTradeImpl(String urlPrex){
-        this.urlPrex = urlPrex;
+    public SpotTradeImpl(String urlPrex) {
+        super(urlPrex);
     }
 
     /**
@@ -61,27 +51,27 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 现货 批量下单URL
      */
-    private final String BATCH_TRADE_URL = "/api/v1/batchTrade.do";
+    private final String BATCH_TRADE_URL = "/api/v1/batch_trade.do";
 
     /**
      * 现货 撤销订单URL
      */
-    private final String CANCEL_ORDER_URL = "/api/v1/cancelOrder.do";
+    private final String CANCEL_ORDER_URL = "/api/v1/cancel_order.do";
 
     /**
      * 现货 获取用户订单URL
      */
-    private final String ORDER_INFO_URL = "/api/v1/orderInfo.do";
+    private final String ORDER_INFO_URL = "/api/v1/order_info.do";
 
     /**
      * 现货 批量获取用户订单URL
      */
-    private final String ORDERS_INFO_URL = "/api/v1/ordersInfo.do";
+    private final String ORDERS_INFO_URL = "/api/v1/orders_info.do";
 
     /**
      * 现货 获取历史订单信息，只返回最近七天的信息URL
      */
-    private final String ORDER_HISTORY_URL = "/api/v1/orderHistory.do";
+    private final String ORDER_HISTORY_URL = "/api/v1/order_history.do";
 
     /**
      * 行情
@@ -93,16 +83,7 @@ public class SpotTradeImpl implements ISpotTrade {
      */
     @Override
     public String ticker(String symbol) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if(!StringUtil.isEmpty(symbol )) {
-            if (!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, TICKER_URL, param);
-        return result;
+        return this.requestGet(symbol, TICKER_URL);
     }
 
     /**
@@ -115,16 +96,7 @@ public class SpotTradeImpl implements ISpotTrade {
      */
     @Override
     public String depth(String symbol) throws HttpException, IOException {
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String param = "";
-        if(!StringUtil.isEmpty(symbol )) {
-            if(!param.equals("")) {
-                param += "&";
-            }
-            param += "symbol=" + symbol;
-        }
-        String result = httpUtil.requestHttpGet(urlPrex, this.DEPTH_URL, param);
-        return result;
+        return this.requestGet(symbol, DEPTH_URL);
     }
 
     /**
@@ -140,43 +112,24 @@ public class SpotTradeImpl implements ISpotTrade {
     public String trades(String symbol, String since) throws HttpException, IOException {
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
         String param = "";
-        if(!StringUtil.isEmpty(symbol )) {
-            if (!param.equals("")) {
-                param += "&";
-            }
+        if (!StringUtil.isEmpty(symbol)) {
             param += "symbol=" + symbol;
         }
-        if(!StringUtil.isEmpty(since )) {
-            if (!param.equals("")) {
+        if (!StringUtil.isEmpty(since)) {
+            if (!"".equals(param)) {
                 param += "&";
             }
             param += "since=" + since;
         }
-        String result = httpUtil.requestHttpGet(urlPrex, this.TRADES_URL, param);
-        return result;
+        return httpUtil.requestHttpGet(urlPrex, this.TRADES_URL, param);
     }
 
     /**
      * 获取用户信息
-     *
-     * @return
-     * @throws IOException
-     * @throws HttpException
      */
     @Override
-    public String userinfo() throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
-        String sign = MD5Util.buildMysignV1(params, this.secretKey);
-        params.put("sign", sign);
-
-        // 发送post请求
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.USERINFO_URL,
-                params);
-
-        return result;
+    public String userInfo() throws HttpException, IOException {
+        return this.requestPost(USERINFO_URL);
     }
 
     /**
@@ -197,16 +150,16 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(type)){
+        if (!StringUtil.isEmpty(type)) {
             params.put("type", type);
         }
-        if(!StringUtil.isEmpty(price)){
+        if (!StringUtil.isEmpty(price)) {
             params.put("price", price);
         }
-        if(!StringUtil.isEmpty(amount)){
+        if (!StringUtil.isEmpty(amount)) {
             params.put("amount", amount);
         }
         String sign = MD5Util.buildMysignV1(params, this.secretKey);
@@ -214,7 +167,7 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.TRADE_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.TRADE_URL,
                 params);
 
         return result;
@@ -223,10 +176,10 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 批量下单
      *
-     * @param symbol      btc_usd: 比特币 ltc_usd: 莱特币
-     * @param type        买卖类型： 限价单（buy/sell） 市价单（buy_market/sell_market）
+     * @param symbol     btc_usd: 比特币 ltc_usd: 莱特币
+     * @param type       买卖类型： 限价单（buy/sell） 市价单（buy_market/sell_market）
      * @param ordersData JSON类型的字符串 例：[{price:3,amount:5},{price:3,amount:3}]
-     *                    最大下单量为5，price和amount参数参考trade接口中的说明
+     *                   最大下单量为5，price和amount参数参考trade接口中的说明
      * @return
      * @throws IOException
      * @throws HttpException
@@ -236,13 +189,13 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(type)){
+        if (!StringUtil.isEmpty(type)) {
             params.put("type", type);
         }
-        if(!StringUtil.isEmpty(ordersData)){
+        if (!StringUtil.isEmpty(ordersData)) {
             params.put("orders_data", ordersData);
         }
         String sign = MD5Util.buildMysignV1(params, this.secretKey);
@@ -250,7 +203,7 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.BATCH_TRADE_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.BATCH_TRADE_URL,
                 params);
 
         return result;
@@ -259,7 +212,7 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 撤销订单
      *
-     * @param symbol   btc_usd: 比特币 ltc_usd: 莱特币
+     * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
      * @param orderId 订单ID(多个订单ID中间以","分隔,一次最多允许撤消3个订单)
      * @return
      * @throws IOException
@@ -270,10 +223,10 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(orderId)){
+        if (!StringUtil.isEmpty(orderId)) {
             params.put("order_id", orderId);
         }
 
@@ -282,7 +235,7 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.CANCEL_ORDER_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.CANCEL_ORDER_URL,
                 params);
 
         return result;
@@ -291,7 +244,7 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 获取用户的订单信息
      *
-     * @param symbol   btc_usd: 比特币 ltc_usd: 莱特币
+     * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
      * @param orderId 订单ID(-1查询全部订单，否则查询相应单号的订单)
      * @return
      * @throws IOException
@@ -302,10 +255,10 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(orderId)){
+        if (!StringUtil.isEmpty(orderId)) {
             params.put("order_id", orderId);
         }
 
@@ -314,7 +267,7 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.ORDER_INFO_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.ORDER_INFO_URL,
                 params);
 
         return result;
@@ -323,8 +276,8 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 批量获取用户订单
      *
-     * @param type     查询类型 0:未成交，未成交 1:完全成交，已撤销
-     * @param symbol   btc_usd: 比特币 ltc_usd: 莱特币
+     * @param type    查询类型 0:未成交，未成交 1:完全成交，已撤销
+     * @param symbol  btc_usd: 比特币 ltc_usd: 莱特币
      * @param orderId 订单ID(多个订单ID中间以","分隔,一次最多允许查询50个订单)
      * @return
      * @throws IOException
@@ -335,13 +288,13 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(type)){
+        if (!StringUtil.isEmpty(type)) {
             params.put("type", type);
         }
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(orderId)){
+        if (!StringUtil.isEmpty(orderId)) {
             params.put("order_id", orderId);
         }
 
@@ -350,7 +303,7 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.ORDERS_INFO_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.ORDERS_INFO_URL,
                 params);
 
         return result;
@@ -359,8 +312,8 @@ public class SpotTradeImpl implements ISpotTrade {
     /**
      * 获取历史订单信息，只返回最近七天的信息
      *
-     * @param symbol       btc_usd: 比特币 ltc_usd: 莱特币
-     * @param status       委托状态: 0：未成交 1：已完成(最近七天的数据)
+     * @param symbol      btc_usd: 比特币 ltc_usd: 莱特币
+     * @param status      委托状态: 0：未成交 1：已完成(最近七天的数据)
      * @param currentPage 当前页数
      * @param pageLength  每页数据条数，最多不超过200
      * @return
@@ -373,16 +326,16 @@ public class SpotTradeImpl implements ISpotTrade {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", apiKey);
-        if(!StringUtil.isEmpty(symbol)){
+        if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
-        if(!StringUtil.isEmpty(status)){
+        if (!StringUtil.isEmpty(status)) {
             params.put("status", status);
         }
-        if(!StringUtil.isEmpty(currentPage)){
+        if (!StringUtil.isEmpty(currentPage)) {
             params.put("current_page", currentPage);
         }
-        if(!StringUtil.isEmpty(pageLength)){
+        if (!StringUtil.isEmpty(pageLength)) {
             params.put("page_length", pageLength);
         }
 
@@ -391,35 +344,10 @@ public class SpotTradeImpl implements ISpotTrade {
 
         // 发送post请求
         HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        String result = httpUtil.requestHttpPost(urlPrex,this.ORDER_HISTORY_URL,
+        String result = httpUtil.requestHttpPost(urlPrex, this.ORDER_HISTORY_URL,
                 params);
 
         return result;
     }
 
-    public String getSecretKey() {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
-    public String getUrlPrex() {
-        return urlPrex;
-    }
-
-    public void setUrlPrex(String urlPrex) {
-        this.urlPrex = urlPrex;
-    }
 }
