@@ -6,7 +6,6 @@ import com.hhzh.common.StringUtil;
 import com.hhzh.service.CommonTradeService;
 import com.hhzh.service.ISpotTrade;
 import org.apache.http.HttpException;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -141,7 +140,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
     public String trade(String symbol, String type, String price, String amount) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
@@ -180,7 +179,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
     public String batchTrade(String symbol, String type, String ordersData) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
@@ -214,7 +213,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
     public String cancelOrder(String symbol, String orderId) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
@@ -246,7 +245,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
     public String orderInfo(String symbol, String orderId) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }
@@ -279,7 +278,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
     public String ordersInfo(String type, String symbol, String orderId) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(type)) {
             params.put("type", type);
         }
@@ -317,7 +316,7 @@ public class SpotTradeImpl extends CommonTradeService implements ISpotTrade {
                                String currentPage, String pageLength) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<String, String>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
         }

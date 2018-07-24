@@ -29,43 +29,45 @@ public class FutureClient {
         IFutureTradeService futurePostV1 = new FutureTradeServiceServiceImpl();
 
         //期货行情信息
-        String ticker = futureGetV1.futureTicker("btc_usd", "this_week");
-
-        //期货指数信息
-        String futureIndex = futureGetV1.futureIndex("btc_usd");
-
-        //期货交易信息
-        String futureTrades = futureGetV1.futureTrades("btc_usd", "this_week");
-
-        //期货市场深度
-        String futureDepth = futureGetV1.futureDepth("btc_usd", "this_week");
-
-        //美元-人民币汇率
-        String exchangeRate = futureGetV1.exchangeRate();
-
-        //期货下单
-        String tradeResultV1 = futurePostV1.futureTrade("btc_usd", "this_week", "10.134", "1", "1", "0");
-        JSONObject tradeJSV1 = JSONObject.parseObject(tradeResultV1);
-        String tradeOrderV1 = tradeJSV1.getString("order_id");
-        System.out.println(tradeResultV1);
-
-        //期货用户订单查询
-        futurePostV1.futureOrderInfo("btc_usd", "this_week", tradeOrderV1, "1", "1", "2");
-
-        //取消订单
-        futurePostV1.futureCancel("btc_usd", "this_week", tradeOrderV1);
+        //String ticker = futureGetV1.futureTicker("btc_usd", "this_week");
+        //
+        ////期货指数信息
+        //String futureIndex = futureGetV1.futureIndex("btc_usd");
+        //
+        ////期货交易信息
+        //String futureTrades = futureGetV1.futureTrades("btc_usd", "this_week");
+        //
+        ////期货市场深度
+        //String futureDepth = futureGetV1.futureDepth("btc_usd", "this_week");
+        //
+        ////美元-人民币汇率
+        //String exchangeRate = futureGetV1.exchangeRate();
+        //
+        ////期货下单
+        //String tradeResultV1 = futurePostV1.futureTrade("btc_usd", "this_week", "10.134", "1", "1", "0");
+        //JSONObject tradeJSV1 = JSONObject.parseObject(tradeResultV1);
+        //String tradeOrderV1 = tradeJSV1.getString("order_id");
+        //System.out.println(tradeResultV1);
+        //
+        ////期货用户订单查询
+        //futurePostV1.futureOrderInfo("btc_usd", "this_week", tradeOrderV1, "1", "1", "2");
+        //
+        ////取消订单
+        //futurePostV1.futureCancel("btc_usd", "this_week", tradeOrderV1);
 
         //期货账户信息
-        futurePostV1.futureUserInfo();
+        String futureUserInfo = futurePostV1.futureUserInfo();
+        System.out.println(futureUserInfo);
 
         //逐仓期货账户信息
-        futurePostV1.futureUserInfo4Fix();
+        String userInfo4Fix = futurePostV1.futureUserInfo4Fix();
+        System.out.println(userInfo4Fix);
 
-        //期货用户持仓查询
-        futurePostV1.futurePosition("btc_usd", "this_week");
-
-        //期货用户逐仓持仓查询
-        futurePostV1.futurePosition4Fix("btc_usd", null);
+        ////期货用户持仓查询
+        //futurePostV1.futurePosition("btc_usd", "this_week");
+        //
+        ////期货用户逐仓持仓查询
+        //futurePostV1.futurePosition4Fix("btc_usd", null);
 
 
     }

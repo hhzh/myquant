@@ -12,7 +12,7 @@ import java.util.Map;
 public class CommonTradeService {
 
     protected String secretKey = "";
-    protected String apiKey = "";
+    protected String api_key = "";
     protected String urlPrex = "https://www.okb.com";
 
 
@@ -47,7 +47,7 @@ public class CommonTradeService {
     protected String requestPost(String url) throws HttpException, IOException {
         // 构造参数签名
         Map<String, String> params = new HashMap<>();
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
 
         String sign = MD5Util.buildMysignV1(params, this.secretKey);
         params.put("sign", sign);
@@ -64,7 +64,7 @@ public class CommonTradeService {
         if (!StringUtil.isEmpty(contractType)) {
             params.put("contract_type", contractType);
         }
-        params.put("apiKey", apiKey);
+        params.put("api_key", api_key);
         String sign = MD5Util.buildMysignV1(params, secretKey);
         params.put("sign", sign);
         // 发送post请求

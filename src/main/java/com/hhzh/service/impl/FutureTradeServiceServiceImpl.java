@@ -6,7 +6,6 @@ import com.hhzh.common.StringUtil;
 import com.hhzh.service.CommonTradeService;
 import com.hhzh.service.IFutureTradeService;
 import org.apache.http.HttpException;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -162,8 +161,8 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
         if (!StringUtil.isEmpty(orderId)) {
             params.put("order_id", orderId);
         }
-        if (!StringUtil.isEmpty(apiKey)) {
-            params.put("apiKey", apiKey);
+        if (!StringUtil.isEmpty(api_key)) {
+            params.put("api_key", api_key);
         }
         if (!StringUtil.isEmpty(symbol)) {
             params.put("symbol", symbol);
@@ -201,8 +200,8 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
         if (!StringUtil.isEmpty(contractType)) {
             params.put("contract_type", contractType);
         }
-        if (!StringUtil.isEmpty(apiKey)) {
-            params.put("apiKey", apiKey);
+        if (!StringUtil.isEmpty(api_key)) {
+            params.put("api_key", api_key);
         }
         if (!StringUtil.isEmpty(price)) {
             params.put("price", price);
@@ -302,8 +301,8 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
         if (!StringUtil.isEmpty(orderId)) {
             params.put("order_id", orderId);
         }
-        if (!StringUtil.isEmpty(apiKey)) {
-            params.put("apiKey", apiKey);
+        if (!StringUtil.isEmpty(api_key)) {
+            params.put("api_key", api_key);
         }
         if (!StringUtil.isEmpty(pageLength)) {
             params.put("page_length", pageLength);
