@@ -62,7 +62,7 @@ public interface IFutureTradeService {
      * @throws HttpException
      * @throws IOException
      */
-    public String futureCancel(String symbol, String contractType, String orderId) throws HttpException, IOException;
+    public String cancelOrder(String symbol, String contractType, String orderId) throws HttpException, IOException;
 
     /**
      * 期货下单

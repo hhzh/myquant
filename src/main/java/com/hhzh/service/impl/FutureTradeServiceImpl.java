@@ -1,10 +1,13 @@
 package com.hhzh.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hhzh.common.HttpUtilManager;
+import com.hhzh.common.HttpUtils;
 import com.hhzh.common.MD5Util;
 import com.hhzh.common.StringUtil;
 import com.hhzh.service.CommonTradeService;
 import com.hhzh.service.IFutureTradeService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpException;
 
 import java.io.IOException;
@@ -12,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 //@Service
-public class FutureTradeServiceServiceImpl extends CommonTradeService implements IFutureTradeService {
+@Slf4j
+public class FutureTradeServiceImpl extends CommonTradeService implements IFutureTradeService {
 
     /**
      * 期货行情URL
@@ -152,29 +156,19 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
      * @throws IOException
      */
     @Override
-    public String futureCancel(String symbol, String contractType, String orderId) throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<String, String>();
-        if (!StringUtil.isEmpty(contractType)) {
-            params.put("contract_type", contractType);
-        }
-        if (!StringUtil.isEmpty(orderId)) {
-            params.put("order_id", orderId);
-        }
-        if (!StringUtil.isEmpty(api_key)) {
-            params.put("api_key", api_key);
-        }
-        if (!StringUtil.isEmpty(symbol)) {
+    public String cancelOrder(String symbol, String contractType, String orderId) {
+        try {
+            JSONObject params = getParams();
             params.put("symbol", symbol);
+            params.put("contract_type", contractType);
+            params.put("order_id", orderId);
+            params.put("sign", sign(params));
+            HttpUtils.Response response = HttpUtils.post(getUrl(FUTURE_CANCEL_URL), params);
+            return JSONObject.toJSONString(response);
+        } catch (Exception e) {
+            log.error("Cancel order failure,symbol:{},contractType:{},orderId:{}", symbol, contractType, orderId);
         }
-        String sign = MD5Util.buildMysignV1(params, secretKey);
-
-        params.put("sign", sign);
-        // 发送post请求
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, FUTURE_CANCEL_URL, params);
-
+        return null;
     }
 
     /**
@@ -285,39 +279,24 @@ public class FutureTradeServiceServiceImpl extends CommonTradeService implements
      * @param currentPage  当前页数
      * @param pageLength   每页获取条数，最多不超过50
      * @return
-     * @throws HttpException
-     * @throws IOException
      */
     @Override
-    public String futureOrderInfo(String symbol, String contractType, String orderId, String status, String currentPage, String pageLength) throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<>();
-        if (!StringUtil.isEmpty(contractType)) {
-            params.put("contract_type", contractType);
-        }
-        if (!StringUtil.isEmpty(currentPage)) {
-            params.put("current_page", currentPage);
-        }
-        if (!StringUtil.isEmpty(orderId)) {
-            params.put("order_id", orderId);
-        }
-        if (!StringUtil.isEmpty(api_key)) {
-            params.put("api_key", api_key);
-        }
-        if (!StringUtil.isEmpty(pageLength)) {
-            params.put("page_length", pageLength);
-        }
-        if (!StringUtil.isEmpty(symbol)) {
+    public String futureOrderInfo(String symbol, String contractType, String orderId, String status, String currentPage, String pageLength) {
+        try {
+            JSONObject params = getParams();
             params.put("symbol", symbol);
-        }
-        if (!StringUtil.isEmpty(status)) {
+            params.put("contract_type", contractType);
             params.put("status", status);
+            params.put("order_id", orderId);
+            params.put("current_page", currentPage);
+            params.put("page_length", pageLength);
+            params.put("sign", sign(params));
+            HttpUtils.Response response = HttpUtils.post(getUrl(FUTURE_ORDER_INFO_URL), params);
+            return JSONObject.toJSONString(response);
+        } catch (Exception e) {
+            log.info("Get future order info failure ,symbol:{},contractType:{},orderId:{},status:{},currentPage:{},pageLength:{}",
+                    symbol, contractType, orderId, status, currentPage, pageLength);
         }
-        String sign = MD5Util.buildMysignV1(params, secretKey);
-        params.put("sign", sign);
-        // 发送post请求
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, this.FUTURE_ORDER_INFO_URL, params);
+        return null;
     }
 }

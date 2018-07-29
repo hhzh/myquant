@@ -3,11 +3,8 @@ package com.hhzh.common;
 import java.io.IOException;
 
 import com.hhzh.service.IFutureTradeService;
-import com.hhzh.service.impl.FutureTradeServiceServiceImpl;
+import com.hhzh.service.impl.FutureTradeServiceImpl;
 import org.apache.http.HttpException;
-
-
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 期货 REST API 客户端请求
@@ -18,7 +15,7 @@ public class FutureClient {
         /**
          *  get请求无需发送身份认证,通常用于获取行情，市场深度等公共信息
          */
-        IFutureTradeService futureGetV1 = new FutureTradeServiceServiceImpl();
+        IFutureTradeService futureGetV1 = new FutureTradeServiceImpl();
 
         /**
          * post请求需发送身份认证，获取用户个人相关信息时，需要指定api_key,与secret_key并与参数进行签名，
@@ -26,7 +23,7 @@ public class FutureClient {
          * 发送post请求之前，程序会做自动加密，生成签名。
          *
          */
-        IFutureTradeService futurePostV1 = new FutureTradeServiceServiceImpl();
+        IFutureTradeService futurePostV1 = new FutureTradeServiceImpl();
 
         //期货行情信息
         //String ticker = futureGetV1.futureTicker("btc_usd", "this_week");
@@ -53,7 +50,7 @@ public class FutureClient {
         //futurePostV1.futureOrderInfo("btc_usd", "this_week", tradeOrderV1, "1", "1", "2");
         //
         ////取消订单
-        //futurePostV1.futureCancel("btc_usd", "this_week", tradeOrderV1);
+        //futurePostV1.cancelOrder("btc_usd", "this_week", tradeOrderV1);
 
         //期货账户信息
         String futureUserInfo = futurePostV1.futureUserInfo();

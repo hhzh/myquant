@@ -1,15 +1,17 @@
 package com.hhzh.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hhzh.api.BaseApi;
 import com.hhzh.common.HttpUtilManager;
-import com.hhzh.common.MD5Util;
+import com.hhzh.common.HttpUtils;
 import com.hhzh.common.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class CommonTradeService {
+@Slf4j
+public class CommonTradeService extends BaseApi {
 
     protected String secretKey = "";
     protected String api_key = "";
@@ -44,32 +46,30 @@ public class CommonTradeService {
         return httpUtil.requestHttpGet(urlPrex, url, param);
     }
 
-    protected String requestPost(String url) throws HttpException, IOException {
-        // 构造参数签名
-        Map<String, String> params = new HashMap<>();
-        params.put("api_key", api_key);
-
-        String sign = MD5Util.buildMysignV1(params, this.secretKey);
-        params.put("sign", sign);
-
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, url, params);
+    protected String requestPost(String url) {
+        try {
+            JSONObject params = getParams();
+            params.put("sign", sign(params));
+            HttpUtils.Response response = HttpUtils.post(getUrl(url), params);
+            return JSONObject.toJSONString(response);
+        } catch (Exception e) {
+            log.error("No params post error,url:{}", url);
+        }
+        return null;
     }
 
-    protected String requestPost(String symbol, String contractType, String url) throws HttpException, IOException {
-        Map<String, String> params = new HashMap<>();
-        if (!StringUtil.isEmpty(symbol)) {
-            params.put("symbol", symbol);
-        }
-        if (!StringUtil.isEmpty(contractType)) {
+    protected String requestPost(String symbol, String contractType, String url) {
+        try {
+            JSONObject params = getParams();
+            params.put("symbol", contractType);
             params.put("contract_type", contractType);
+            params.put("sign", sign(params));
+            HttpUtils.Response response = HttpUtils.post(getUrl(url), params);
+            return JSONObject.toJSONString(response);
+        } catch (Exception e) {
+            log.error("Have params post error,symbol:{},contractType:{},url:{}",symbol,contractType,url);
         }
-        params.put("api_key", api_key);
-        String sign = MD5Util.buildMysignV1(params, secretKey);
-        params.put("sign", sign);
-        // 发送post请求
-        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
-        return httpUtil.requestHttpPost(urlPrex, url, params);
+        return null;
     }
 
 }
