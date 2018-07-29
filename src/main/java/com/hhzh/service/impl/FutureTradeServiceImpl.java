@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 //@Service
 @Slf4j
 public class FutureTradeServiceImpl extends CommonTradeService implements IFutureTradeService {
@@ -76,6 +78,15 @@ public class FutureTradeServiceImpl extends CommonTradeService implements IFutur
      */
     private final String FUTURE_ORDER_INFO_URL = "/api/v1/future_order_info.do";
 
+    /**
+     * 获取K线信息
+     */
+    private final String FUTURE_KLINE = "/api/v1/future_kline.do";
+
+    /**
+     * 获取当前可用合约总持仓量
+     */
+    private final String FUTURE_HOLD_AMOUNT = "/api/v1/future_hold_amount.do";
 
     /**
      * 期货行情
@@ -299,4 +310,42 @@ public class FutureTradeServiceImpl extends CommonTradeService implements IFutur
         }
         return null;
     }
+
+    /**
+     * 获取K线信息
+     *
+     * @param symbol       btc_usd:比特币    ltc_usd :莱特币
+     * @param type         1min/3min/5min/15min/30min/1day/3day/1week/1hour/2hour/4hour/6hour/12hour
+     * @param contractType 合约类型: this_week:当周   next_week:下周   month:当月   quarter:季度
+     * @param size         指定获取数据的条数
+     * @param since        时间戳（eg：1417536000000）。 返回该时间戳以后的数据
+     */
+    @Override
+    public String futureKLine(String symbol, String type, String contractType, Integer size, Long since) throws IOException, HttpException {
+        HttpUtilManager httpUtil = HttpUtilManager.getInstance();
+        String param = "symbol=" + symbol;
+        param += "&type=" + type;
+        param += "&contract_type=" + contractType;
+        if (size != null && size > 0) {
+            param += "&size=" + size;
+        }
+        if (since != null && since > 0) {
+            param += "&since=" + since;
+        }
+
+        return httpUtil.requestHttpGet(urlPrex, FUTURE_KLINE, param);
+    }
+
+    /**
+     * 获取当前可用合约总持仓量
+     *
+     * @param symbol       btc_usd:比特币    ltc_usd :莱特币
+     * @param contractType 合约类型: this_week:当周   next_week:下周   month:当月   quarter:季度
+     */
+    @Override
+    public String futureHoldAmount(String symbol, String contractType) throws HttpException, IOException {
+        return this.requestGet(symbol, contractType, FUTURE_HOLD_AMOUNT);
+    }
+
+
 }
