@@ -14,17 +14,12 @@ public class BaseApi {
     protected static final String apiKey = "";
     protected static final String secretKey = "";
 
-    /**
-     * 47.90.110.144 testokex.bafang.com
-     * 47.90.110.144 www.okex.com
-     */
-//    protected static final String url = "https://testokex.bafang.com/";
     protected static final String url = "https://www.okb.com/";
 
     private static final String MD5 = "MD5";
     private static final String UTF_8 = "UTF-8";
 
-    public static final String getUrl(String requestPath) {
+    public static String getUrl(String requestPath) {
         return url + requestPath;
     }
 

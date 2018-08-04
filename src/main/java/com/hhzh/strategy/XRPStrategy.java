@@ -23,11 +23,11 @@ public class XRPStrategy {
         String cachePriceStr = stringRedisTemplate.opsForValue().get("xrp");
         BigDecimal cachePrice = new BigDecimal(cachePriceStr);
         // 2、从K线行情中查出最新价格
-        String kLine = futureTradeService.futureKLine("xpr_usd", "1min", "quarter", 1, 0L);
+        String kLine = futureTradeService.futureKLine("xrp_usd", "1min", "quarter", 1, 0L);
         JSONArray kLineList = JSONArray.parseArray(kLine);
         JSONArray lines = JSONArray.parseArray(kLineList.getString(0));
         BigDecimal lastPrice = lines.getBigDecimal(4);
-        // 3、如果缓存中的交易价格高于最新价格，就买入开多，并卖出平空;如果缓存中的交易价格低于最新价格，就卖出开空，并卖出平多;相等就不处理；
+        // 3、如果缓存中的交易价格高于最新价格，就买入开多，并买入平空;如果缓存中的交易价格低于最新价格，就卖出开空，并卖出平多;相等就不处理；
         // 4、下单交易
         if (cachePrice.compareTo(lastPrice) > 0) {
             String openLongResult = futureTradeService.futureTrade("xrp_usd", "quarter", lastPrice.toString(), "1", "1", "0");

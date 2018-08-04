@@ -9,6 +9,7 @@ import com.hhzh.service.CommonTradeService;
 import com.hhzh.service.IFutureTradeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpException;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
-//@Service
+@Service
 @Slf4j
 public class FutureTradeServiceImpl extends CommonTradeService implements IFutureTradeService {
 
@@ -349,3 +350,4 @@ public class FutureTradeServiceImpl extends CommonTradeService implements IFutur
 
 
 }
+
