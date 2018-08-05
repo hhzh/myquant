@@ -19,6 +19,14 @@ public class XRPStrategy {
     private StringRedisTemplate stringRedisTemplate;
 
     public void executeStrategy() throws IOException, HttpException {
+        // 1、从MySQL中查询未成交的开仓单
+        // 2、用订单号去交易所查询，是否已成交
+        // 3、如果已成交，就更新订单状态，再以有利润的价格挂平仓单（需要查询可平仓量）
+        // 4、查询最新成交价，和多仓、空仓的成本价比较
+        // 5、如果最新成交价低于多仓成本价，就开多，还要查一下是否已经在这个价位下过开仓单（也可以一次就阶梯挂开仓单）（也可以手动挂好开仓单，用程序去查询自动挂平仓单）
+        // 6、如果最新成交价高于空仓成本价，就开空
+        // 7、如果多仓、空仓持仓量高于30%，就停止该仓的交易
+
         // 1、从缓存中查出上次交易的价格
         String cachePriceStr = stringRedisTemplate.opsForValue().get("xrp");
         BigDecimal cachePrice = new BigDecimal(cachePriceStr);
