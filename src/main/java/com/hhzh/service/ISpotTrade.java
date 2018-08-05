@@ -40,7 +40,7 @@ public interface ISpotTrade {
      * @throws IOException
      * @throws HttpException
      */
-    public String userinfo() throws HttpException, IOException;
+    public String userInfo() throws HttpException, IOException;
 
     /**
      * 下单交易
